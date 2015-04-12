@@ -56,7 +56,7 @@ class SlackListener < Redmine::Hook::Listener
 
 	def controller_issues_bulk_edit_before_save(context={})
 		issue = context[:issue]
-		journal = issue.journals.last
+		journal = issue.journals.reload.last
 
 		channel = channel_for_project issue.project
 		url = url_for_project issue.project
