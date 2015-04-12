@@ -1,6 +1,6 @@
 require 'httpclient'
 
-class SlackListener < Redmine::Hook::Listener
+class SlackListener
 	def controller_issues_new_after_save(context={})
 		issue = context[:issue]
 
@@ -37,24 +37,6 @@ class SlackListener < Redmine::Hook::Listener
 	end
 
 	def controller_issues_edit_after_save(context={})
-		issue = context[:issue]
-		journal = context[:journal]
-
-		channel = channel_for_project issue.project
-		url = url_for_project issue.project
-
-		return unless channel and url
-
-		msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>"
-
-		attachment = {}
-		attachment[:text] = escape journal.notes if journal.notes
-		attachment[:fields] = journal.details.map { |d| detail_to_field d }
-
-		speak msg, channel, attachment, url
-	end
-
-	def controller_issues_bulk_edit_before_save(context={})
 		issue = context[:issue]
 		journal = context[:journal]
 
